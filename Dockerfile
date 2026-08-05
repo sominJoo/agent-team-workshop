@@ -2,8 +2,12 @@
 
 # ─────────────────────────────────────────────
 # builder — 의존성 설치 후 Nuxt 빌드
+#
+# $BUILDPLATFORM: 빌드를 실행하는 호스트의 아키텍처(맥이면 arm64).
+# Nitro 산출물은 아키텍처에 의존하지 않는 순수 JS라, amd64를 노리더라도
+# 이 단계까지 QEMU로 에뮬레이션할 이유가 없다. 네이티브로 빌드해야 빠르다.
 # ─────────────────────────────────────────────
-FROM node:22-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -18,6 +22,10 @@ RUN npm run build
 
 # ─────────────────────────────────────────────
 # runtime — Nitro 산출물만 실행
+#
+# --platform을 지정하지 않으므로 빌드 시 넘긴 타겟 아키텍처를 따른다.
+#   docker build --platform linux/amd64  → amd64 이미지 (x86_64 리눅스 서버용)
+#   docker build                         → 호스트와 동일 (맥에서는 arm64)
 # ─────────────────────────────────────────────
 FROM node:22-alpine AS runtime
 
