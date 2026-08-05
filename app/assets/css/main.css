@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Gothic+A1:wght@400;600;700;800;900&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #d9d4c7;
+  font-family: 'Gothic A1', system-ui, sans-serif;
+  color: #1A1A1A;
+}
+
+a { color: #1B3A8C; text-decoration: none; }
+a:hover { color: #E8402A; }
+
+input { font-family: 'Gothic A1', sans-serif; }
+button { font-family: 'Gothic A1', sans-serif; cursor: pointer; }
+
+/* 폰 내부 스크롤 영역 */
+.sc {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sc::-webkit-scrollbar { width: 0; }
+
+/* 인트로 스플래시 애니메이션 */
+@keyframes introPop {
+  0% { opacity: 0; transform: scale(1.18); }
+  40% { opacity: 1; transform: scale(.97); }
+  70% { transform: scale(1.015); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes introOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
