@@ -13,6 +13,9 @@ node_modules
 logs
 *.log
 
+# 디자인 프로토타입 원본 (루트 HTML, 파일당 약 11MB)
+/*.html
+
 # Misc
 .DS_Store
 .fleet
