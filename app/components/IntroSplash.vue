@@ -2,7 +2,9 @@
 import { useWorkshopStore } from '~/stores/workshop'
 
 const store = useWorkshopStore()
-const introImage = '/images/workshop-intro.png'
+
+// public/ 자산은 baseURL을 붙여야 서브경로 배포(GitHub Pages)에서도 해석된다
+const introImage = `${useRuntimeConfig().app.baseURL}images/workshop-intro.png`
 </script>
 
 <template>

@@ -4,6 +4,9 @@ import { RED, SKY, GREEN, PLUM, NAVY, GOLD, GRAY } from '~/data/workshop'
 
 const store = useWorkshopStore()
 
+// public/ 자산은 baseURL을 붙여야 서브경로 배포(GitHub Pages)에서도 해석된다
+const posterImage = `${useRuntimeConfig().app.baseURL}images/workshop-intro.png`
+
 interface Item {
   variant?: 'normal' | 'dashed' | 'game' | 'final'
   /** 좌측 시간 컬럼: 시작 / 종료(또는 '집결' 같은 메모) */
@@ -62,7 +65,7 @@ function onAction(a: 'goMidRide' | 'goGame') {
     <!-- 포스터 히어로 -->
     <section class="hero">
       <div class="hero-poster">
-        <img src="/images/workshop-intro.png" alt="2026 하계 워크샵 포스터">
+        <img :src="posterImage" alt="2026 하계 워크샵 포스터">
       </div>
       <div class="hero-copy">함께 웃고, 쉬고, 더 가까워지는 하루</div>
       <div class="hero-meta">2026.09.03(목) – 09.04(금) · 양평 지온스테이</div>
