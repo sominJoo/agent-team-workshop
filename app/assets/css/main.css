@@ -1,36 +1,119 @@
-@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Gothic+A1:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gothic+A1:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* ── 색: 잉크 / 중성 ── */
+  --ink: #20242C;
+  --ink-2: #3A3E46;
+  --ink-3: #6E6C64;
+  --muted: #8A8578;
+  --muted-2: #A9A498;
+  --muted-3: #B0AB9C;
+
+  /* ── 색: 지면 ── */
+  --paper: #F6F1E6;      /* 앱 배경 */
+  --paper-2: #FBF7EE;    /* 보조 카드 (공지 등) */
+  --card: #fff;
+  --track: #EEE8DA;      /* 세그먼트 트랙 */
+
+  /* ── 색: 액센트 (일정·차편·방배정 구분용) ── */
+  --red: #C4452F;
+  --sky: #4A8FB0;
+  --green: #4A7C59;
+  --plum: #9E4368;
+  --navy: #2A4A8B;
+  --gold: #D99A2B;
+  --amber: #F0C24B;             /* 다크 배경 위 강조 */
+  --amber-bg: #FBF3DF;          /* 라이트 강조 배경 */
+  --amber-fg: #A8791F;
+  --amber-line: rgba(217, 154, 43, .3);
+  --green-line: rgba(74, 124, 89, .3);
+  --navy-line: rgba(42, 74, 139, .3);
+
+  /* ── 선: 전부 헤어라인 ── */
+  --line: rgba(32, 36, 44, .10);
+  --line-2: rgba(32, 36, 44, .14);
+  --line-soft: rgba(32, 36, 44, .07);
+  --hairline: rgba(32, 36, 44, .09);
+  --dash: rgba(32, 36, 44, .2);
+
+  /* ── 형태 ── */
+  --radius: 14px;
+  --radius-sm: 12px;
+  --radius-lg: 16px;
+  --shadow-card: 0 4px 14px rgba(32, 36, 44, .04);
+  --shadow-dark: 0 6px 18px rgba(32, 36, 44, .14);
+
+  /* ── 레이아웃 (반응형 기준값) ── */
+  --content-max: 1120px;
+  --page-pad: 16px;
+  --card-gap: 10px;
+  --bottom-space: 100px;  /* 하단 고정 네비 높이 (모바일) */
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-pad: 22px;
+    --card-gap: 14px;
+  }
+}
+
+/* 데스크톱: 하단 네비가 사라지므로 여백 축소 */
+@media (min-width: 900px) {
+  :root {
+    --page-pad: 28px;
+    --card-gap: 16px;
+    --bottom-space: 48px;
+  }
+}
 
 * { box-sizing: border-box; }
 
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   margin: 0;
-  background: #d9d4c7;
-  font-family: 'Gothic A1', system-ui, sans-serif;
-  color: #1A1A1A;
+  background: var(--paper);
+  font-family: 'Gothic A1', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-a { color: #1B3A8C; text-decoration: none; }
-a:hover { color: #E8402A; }
+a { color: var(--navy); text-decoration: none; }
+a:hover { color: var(--red); }
 
-input { font-family: 'Gothic A1', sans-serif; }
-button { font-family: 'Gothic A1', sans-serif; cursor: pointer; }
+button { font-family: inherit; cursor: pointer; }
+input { font-family: inherit; }
 
-/* 폰 내부 스크롤 영역 */
-.sc {
-  height: 100%;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+/* 콘텐츠 폭 제한 컨테이너 */
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--page-pad);
 }
-.sc::-webkit-scrollbar { width: 0; }
 
-/* 인트로 스플래시 애니메이션 */
+/* 섹션 라벨 (대문자 자간 스타일) */
+.eyebrow {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+
 @keyframes introPop {
-  0% { opacity: 0; transform: scale(1.18); }
-  40% { opacity: 1; transform: scale(.97); }
-  70% { transform: scale(1.015); }
-  100% { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: scale(1.06); }
+  to { opacity: 1; transform: scale(1); }
 }
 @keyframes introOut {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.06); }
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }

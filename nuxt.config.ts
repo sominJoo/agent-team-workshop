@@ -13,7 +13,8 @@ export default defineNuxtConfig({
     head: {
       title: '2026 하계 워크샵',
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        // viewport-fit=cover: 노치 기기에서 env(safe-area-inset-*) 적용을 위해 필요
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
         { charset: 'utf-8' },
       ],
     },
