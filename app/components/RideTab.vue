@@ -19,20 +19,21 @@ const segs = [
       <div class="my-ride-sub">{{ store.myRide.sub }}</div>
     </div>
 
-    <!-- 구간 세그먼트 -->
+    <!-- 구간 세그먼트 (트랙 안에서 이동) -->
     <div class="segs">
       <button
         v-for="s in segs"
         :key="s.key"
         class="seg"
-        :style="{ background: store.seg === s.key ? '#1A1A1A' : '#fff', color: store.seg === s.key ? '#F7D117' : '#1A1A1A' }"
+        :class="{ 'is-active': store.seg === s.key }"
         @click="store.setSeg(s.key)"
       >{{ s.label }}</button>
     </div>
 
     <div class="cards">
-      <div v-for="(r, i) in store.rides" :key="i" class="card" :style="{ boxShadow: `3px 3px 0 ${r.shadow}` }">
-        <div class="card-head" :style="{ background: r.head, color: r.headFg }">
+      <div v-for="(r, i) in store.rides" :key="i" class="card">
+        <div class="card-head">
+          <span class="dot" :style="{ background: r.dot }" />
           <span class="team">{{ r.team }}</span>
           <span class="car">{{ r.car }}</span>
         </div>
@@ -46,81 +47,131 @@ const segs = [
 
           <div class="stops">
             <template v-for="(st, si) in r.stops" :key="si">
-              <a v-if="st.has" :href="st.url" target="_blank" class="stop-link">
-                <span class="stop-no">{{ st.n }}</span>📍 {{ st.name }}
+              <a v-if="st.has" :href="st.url" target="_blank" rel="noopener" class="stop-link">
+                <span class="stop-no">{{ st.n }}</span>{{ st.name }} ›
               </a>
               <span v-else class="stop-none">
                 <span class="stop-no-none">{{ st.n }}</span>{{ st.name }}
               </span>
             </template>
-            <span v-if="r.noStops" class="stop-undecided">📍 집결 장소 미정</span>
+            <span v-if="r.noStops" class="stop-none">집결 장소 미정</span>
           </div>
 
-          <div v-if="r.mine" class="mine-badge">⭐ 내가 탑승하는 차량</div>
+          <div v-if="r.mine" class="mine">내가 탑승하는 차량</div>
         </div>
       </div>
     </div>
-
-    <div class="tab-bottom-space" />
   </div>
 </template>
 
 <style scoped>
-.ride { padding: 6px 14px 0; }
+.ride { padding: 14px 0 0; }
 
 .my-ride {
-  background: #F7D117; border: 3px solid #1A1A1A; border-radius: 10px;
-  padding: 11px 13px; box-shadow: 3px 3px 0 #1A1A1A; margin-bottom: 12px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 14px;
 }
-.my-ride-label { font-size: 9.5px; font-weight: 900; color: #1A1A1A; opacity: .7; }
-.my-ride-line { font-family: 'Jua', sans-serif; font-size: 17px; margin-top: 2px; }
-.my-ride-sub { font-size: 11.5px; font-weight: 700; color: #444; margin-top: 3px; }
+.my-ride-label { font-size: 10px; font-weight: 800; letter-spacing: .06em; color: var(--amber-fg); }
+.my-ride-line { font-size: 15px; font-weight: 800; margin-top: 3px; }
+.my-ride-sub { font-size: 11.5px; font-weight: 600; color: var(--muted); margin-top: 3px; }
 
-.segs { display: flex; gap: 7px; margin-bottom: 12px; }
+/* 세그먼트 컨트롤 */
+.segs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  background: var(--track);
+  border-radius: 20px;
+  padding: 3px;
+}
 .seg {
-  flex: 1; padding: 8px 0; border-radius: 20px; border: 3px solid #1A1A1A;
-  font-size: 12.5px; font-weight: 900;
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 18px;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 800;
+  background: transparent;
+  color: var(--muted);
+  transition: background .14s ease, color .14s ease;
 }
+.seg.is-active { background: var(--card); color: var(--ink); }
 
-.cards { display: flex; flex-direction: column; gap: 10px; }
-.card { border: 3px solid #1A1A1A; border-radius: 10px; background: #fff; overflow: hidden; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--card-gap);
+  align-items: start;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
 .card-head {
-  display: flex; align-items: center; gap: 8px; padding: 8px 11px;
-  border-bottom: 3px solid #1A1A1A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line-soft);
 }
-.team { font-family: 'Jua', sans-serif; font-size: 15px; }
-.car { margin-left: auto; font-size: 10.5px; font-weight: 900; background: rgba(0,0,0,.18); padding: 3px 8px; border-radius: 20px; }
-.card-body { padding: 10px 11px; }
+.dot { flex: none; width: 6px; height: 6px; border-radius: 50%; }
+.team { font-size: 14px; font-weight: 800; }
+.car { margin-left: auto; font-size: 10.5px; font-weight: 600; color: var(--muted); }
+.card-body { padding: 12px 14px; }
 
-.driver-row { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+.driver-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .driver-badge {
-  width: 26px; height: 26px; border-radius: 50%; background: #1A1A1A; color: #F7D117;
-  display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: var(--muted);
+  border: 1px solid var(--line-2);
+  padding: 2px 7px;
+  border-radius: 20px;
 }
 .driver-name { font-size: 13.5px; font-weight: 800; }
-.riders { font-size: 12px; font-weight: 600; color: #555; line-height: 1.5; }
-.place { font-size: 12px; font-weight: 700; color: #1B3A8C; margin-top: 5px; }
+.riders { font-size: 12px; font-weight: 600; color: var(--ink-3); line-height: 1.5; }
+.place { font-size: 12px; font-weight: 700; color: var(--navy); margin-top: 5px; }
 
-.stops { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-.stop-link, .stop-none, .stop-undecided {
-  display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800;
-  padding: 5px 9px; border-radius: 20px; white-space: nowrap;
+.stops { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.stop-link, .stop-none {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
-.stop-link { background: #2E9B4F; color: #fff; border: 2px solid #1A1A1A; }
-.stop-none { background: #fff; color: #777; border: 2px dashed #1A1A1A; }
-.stop-undecided { background: #fff; color: #888; border: 2px dashed #1A1A1A; }
-.stop-no {
-  background: #fff; color: #2E9B4F; width: 14px; height: 14px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900;
-}
-.stop-no-none {
-  background: #EDE7D8; width: 14px; height: 14px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900;
-}
-.mine-badge {
-  margin-top: 8px; background: #F7D117; border: 2px solid #1A1A1A; border-radius: 7px;
-  padding: 5px 9px; font-size: 11px; font-weight: 900;
+.stop-link { color: var(--green); border: 1px solid var(--green-line); }
+.stop-link:hover { color: var(--green); }
+.stop-none { color: var(--muted-2); border: 1px dashed var(--dash); }
+.stop-no { font-size: 9.5px; color: var(--muted-2); }
+.stop-no-none { font-size: 9.5px; }
+
+.mine {
+  margin-top: 9px;
+  background: var(--amber-bg);
+  border-radius: 9px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--amber-fg);
 }
 
-.tab-bottom-space { height: 96px; }
+/* ── 데스크톱 ── */
+@media (min-width: 900px) {
+  .ride { padding-top: 20px; }
+  /* 내 차편 배너와 구간 선택은 전체 폭을 쓰지 않도록 제한 */
+  .my-ride, .segs { max-width: 480px; }
+  .segs { margin-bottom: 20px; }
+  .team { font-size: 15px; }
+}
 </style>

@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Actions 탭에서 수동 실행 (배포만 다시 돌리고 싶을 때)
+  workflow_dispatch:
+
+# Pages 배포에 필요한 최소 권한
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포는 항상 최신 커밋 하나만. 진행 중인 건 취소하지 않는다(중간 상태로 남으면 곤란).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate static site
+        # 프로젝트 사이트는 https://<user>.github.io/<repo>/ 로 서빙되므로
+        # 자산 경로가 /<repo>/ 를 기준으로 생성되어야 한다.
+        env:
+          NUXT_APP_BASE_URL: /${{ github.event.repository.name }}/
+        run: npm run generate
+
+      # Jekyll이 _nuxt 처럼 밑줄로 시작하는 디렉터리를 무시하는 것을 막는다
+      - run: touch .output/public/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .output/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
