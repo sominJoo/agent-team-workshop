@@ -24,6 +24,10 @@ interface State {
 
 const pad = (n: number) => (n < 10 ? '0' : '') + n
 
+// 디자인 토큰과 동일한 값 (인라인 스타일로 내려보내야 하는 것만 상수화)
+const INK = '#20242C'
+const PAPER = '#F6F1E6'
+
 export const useWorkshopStore = defineStore('workshop', {
   state: (): State => ({
     tab: 'schedule',
@@ -46,12 +50,12 @@ export const useWorkshopStore = defineStore('workshop', {
     showMePicker: (s) => s.tab === 'ride' || s.tab === 'room',
     hasMe: (s) => !!s.me,
 
-    // 사람 선택 칩
+    // 사람 선택 칩 — 선택 시 잉크 채움, 미선택은 아웃라인
     people(s): { name: string; bg: string; fg: string }[] {
       return NAMES.map((n) => ({
         name: n,
-        bg: s.me === n ? '#1A1A1A' : '#fff',
-        fg: s.me === n ? '#F7D117' : '#1A1A1A',
+        bg: s.me === n ? INK : 'transparent',
+        fg: s.me === n ? PAPER : '#6E6C64',
       }))
     },
 
@@ -85,18 +89,22 @@ export const useWorkshopStore = defineStore('workshop', {
       return { line: `${this.me}님 배정 없음`, sub: '이 구간에는 배정된 차량이 없습니다.' }
     },
 
-    // 방배정 (검색어/내 이름 하이라이트)
+    // 방배정 (검색어/내 이름 하이라이트 — 앰버 톤)
     rooms(s) {
       const q = (s.roomQ || '').trim()
       return ROOMS.map((rm) => ({
         title: rm.title,
         bed: rm.bed,
         count: rm.count,
-        head: rm.head,
-        shadow: rm.shadow,
+        dot: rm.dot,
         members: rm.members.map((n) => {
           const hit = (q && n.indexOf(q) >= 0) || (!q && s.me === n)
-          return { name: n, bg: hit ? '#F7D117' : '#EDE7D8', fg: '#1A1A1A' }
+          return {
+            name: n,
+            bg: hit ? '#FBF3DF' : 'transparent',
+            fg: hit ? '#A8791F' : '#3A3E46',
+            line: hit ? 'rgba(217,154,43,.45)' : 'rgba(32,36,44,.14)',
+          }
         }),
       }))
     },
@@ -115,19 +123,19 @@ export const useWorkshopStore = defineStore('workshop', {
         : `${pad(hh)}:${pad(mm)}:${pad(ss)}`
     },
 
-    // 게임 목록 (태그 스타일 포함)
+    // 게임 목록 (태그는 아웃라인 배지)
     games() {
       return GAMES.map((g, i) => {
         const ts = tagStyle(g.tag)
-        return { ...g, tagBg: ts.bg, tagFg: ts.fg, index: i }
+        return { ...g, tagFg: ts.fg, tagLine: ts.line, index: i }
       })
     },
     currentGame: (s) => (s.game === null ? null : GAMES[s.game] ?? null),
-    modal(): null | { no: string; title: string; color: string; tag: string; tagBg: string; tagFg: string; lines: string[] } {
+    modal(): null | { no: string; title: string; color: string; tag: string; tagFg: string; tagLine: string; lines: string[] } {
       const g = this.currentGame
       if (!g || !this.unlocked) return null
       const ts = tagStyle(g.tag)
-      return { no: g.no, title: g.title, color: g.color, tag: g.tag, tagBg: ts.bg, tagFg: ts.fg, lines: g.lines }
+      return { no: g.no, title: g.title, color: g.color, tag: g.tag, tagFg: ts.fg, tagLine: ts.line, lines: g.lines }
     },
   },
 
@@ -159,6 +167,6 @@ export const useWorkshopStore = defineStore('workshop', {
 
 function tagStyle(t: string) {
   return t === '개인전'
-    ? { bg: '#1A1A1A', fg: '#F7D117' }
-    : { bg: '#EDE7D8', fg: '#1A1A1A' }
+    ? { fg: '#20242C', line: 'rgba(32,36,44,.35)' }
+    : { fg: '#8A8578', line: 'rgba(32,36,44,.16)' }
 }

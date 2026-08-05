@@ -1,121 +1,178 @@
 <script setup lang="ts">
+import { NAVY, SKY, PLUM } from '~/data/workshop'
+
 interface Member {
   role: string
   name: string
   initial: string
   color: string
+  /** 아바타 배경 (액센트의 저채도 틴트) */
+  tint: string
 }
 
 const members: Member[] = [
-  { role: '전무', name: '김예지', initial: '김', color: '#1B3A8C' },
-  { role: '상무', name: '주소민', initial: '주', color: '#2FA9E0' },
-  { role: '고문', name: '오민영', initial: '오', color: '#C4267E' },
+  { role: '전무', name: '김예지', initial: '김', color: NAVY, tint: 'rgba(42,74,139,.10)' },
+  { role: '상무', name: '주소민', initial: '주', color: SKY, tint: 'rgba(74,143,176,.12)' },
+  { role: '고문', name: '오민영', initial: '오', color: PLUM, tint: 'rgba(158,67,104,.12)' },
 ]
 </script>
 
 <template>
   <div class="org">
-    <div class="banner-wrap">
-      <div class="banner">
-        <div class="banner-top">2026 하계 워크샵</div>
-        <div class="banner-title">워크샵 위원회</div>
-      </div>
-      <div class="banner-stem" />
-    </div>
+    <!-- 조직도는 중앙 정렬 구조라 데스크톱에서도 폭을 제한한다 -->
+    <div class="org-inner">
+      <div class="eyebrow org-eyebrow">2026 하계 워크샵 · 워크샵 위원회</div>
 
-    <!-- 위원장 -->
-    <div class="chief">
-      <span class="chief-avatar">정</span>
-      <div class="chief-info">
-        <div class="chief-role">위원장</div>
-        <div class="chief-name">정설화</div>
-      </div>
-      <div class="chief-actions">
-        <a href="tel:01000000000" class="btn-call chief-call">전화</a>
-        <a href="sms:01000000000" class="btn-sms chief-sms">문자</a>
-      </div>
-    </div>
-
-    <!-- 나머지 위원 -->
-    <div class="member-list">
-      <div v-for="m in members" :key="m.name" class="member" :style="{ boxShadow: `3px 3px 0 ${m.color}` }">
-        <span class="member-avatar" :style="{ background: m.color }">{{ m.initial }}</span>
-        <div class="member-info">
-          <div class="member-role" :style="{ color: m.color }">{{ m.role }}</div>
-          <div class="member-name">{{ m.name }}</div>
+      <!-- 위원장 -->
+      <div class="chief">
+        <span class="chief-avatar">정</span>
+        <div class="chief-info">
+          <div class="chief-role">위원장</div>
+          <div class="chief-name">정설화</div>
         </div>
-        <a href="tel:01000000000" class="btn-call">전화</a>
-        <a href="sms:01000000000" class="btn-sms">문자</a>
+        <div class="chief-actions">
+          <a href="tel:01000000000" class="chief-call">전화</a>
+          <a href="sms:01000000000" class="chief-sms">문자</a>
+        </div>
       </div>
-    </div>
 
-    <div class="duty">
-      <div class="duty-label">위원회 담당 업무</div>
-      <div class="duty-body">일정 기획 · 조 편성 · 차량 배치 · 숙소 방배정 · 게임 진행</div>
-    </div>
+      <!-- 나머지 위원 -->
+      <div class="member-list">
+        <div v-for="m in members" :key="m.name" class="member">
+          <span class="member-avatar" :style="{ background: m.tint, color: m.color }">{{ m.initial }}</span>
+          <div class="member-info">
+            <div class="member-role" :style="{ color: m.color }">{{ m.role }}</div>
+            <div class="member-name">{{ m.name }}</div>
+          </div>
+          <a href="tel:01000000000" class="btn-call">전화</a>
+          <a href="sms:01000000000" class="btn-sms">문자</a>
+        </div>
+      </div>
 
-    <div class="note">* 연락처는 자리표시(010-0000-0000)입니다.</div>
-    <div class="tab-bottom-space" />
+      <div class="duty">
+        <div class="duty-label">위원회 담당 업무</div>
+        <div class="duty-body">일정 기획 · 조 편성 · 차량 배치 · 숙소 방배정 · 게임 진행</div>
+      </div>
+
+      <div class="note">* 연락처는 자리표시(010-0000-0000)입니다.</div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.org { padding: 6px 14px 0; }
+.org { padding: 18px 0 0; }
+/* 가로형 행 카드가 늘어지지 않는 폭으로 제한 */
+.org-inner { width: 100%; max-width: 620px; margin: 0 auto; }
+.org-eyebrow { margin-bottom: 10px; }
 
-.banner-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 12px; }
-.banner {
-  background: #1A1A1A; color: #F7D117; border-radius: 9px; padding: 9px 18px;
-  text-align: center; box-shadow: 3px 3px 0 #E8402A;
-}
-.banner-top { font-size: 9.5px; font-weight: 900; opacity: .75; }
-.banner-title { font-family: 'Black Han Sans', sans-serif; font-size: 20px; line-height: 1.2; }
-.banner-stem { width: 3px; height: 14px; background: #1A1A1A; }
-
+/* ── 위원장 (다크 카드) ── */
 .chief {
-  border: 3px solid #1A1A1A; border-radius: 10px; background: #F7D117; padding: 12px;
-  box-shadow: 3px 3px 0 #1A1A1A; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: var(--card-gap);
 }
 .chief-avatar {
-  width: 52px; height: 52px; border-radius: 50%; background: #1A1A1A; color: #F7D117;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Black Han Sans', sans-serif; font-size: 22px;
+  width: 50px;
+  height: 50px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--amber);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 21px;
 }
-.chief-info { flex: 1; }
-.chief-role { font-size: 10px; font-weight: 900; color: #1A1A1A; opacity: .65; }
-.chief-name { font-family: 'Black Han Sans', sans-serif; font-size: 24px; line-height: 1.1; }
-.chief-actions { display: flex; flex-direction: column; gap: 5px; }
+.chief-info { flex: 1; min-width: 0; }
+.chief-role { font-size: 10px; font-weight: 800; letter-spacing: .08em; color: var(--muted-2); }
+.chief-name {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 23px;
+  line-height: 1.2;
+  color: var(--paper);
+  margin-top: 2px;
+}
+.chief-actions { display: flex; flex-direction: column; gap: 6px; }
+.chief-call, .chief-sms {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 13px;
+  border-radius: 20px;
+  text-align: center;
+  white-space: nowrap;
+}
+.chief-call { background: var(--amber); color: var(--ink); }
+.chief-call:hover { color: var(--ink); }
+.chief-sms { color: var(--paper); border: 1px solid rgba(246, 241, 230, .3); }
+.chief-sms:hover { color: var(--paper); }
 
-.member-list { display: flex; flex-direction: column; gap: 10px; }
+/* ── 위원 카드 ── */
+.member-list { display: flex; flex-direction: column; gap: var(--card-gap); }
 .member {
-  border: 3px solid #1A1A1A; border-radius: 10px; background: #fff; padding: 11px 12px;
-  display: flex; align-items: center; gap: 11px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-card);
 }
 .member-avatar {
-  width: 42px; height: 42px; border-radius: 50%; color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Jua', sans-serif; font-size: 17px;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
 }
-.member-info { flex: 1; }
-.member-role { font-size: 10px; font-weight: 900; }
-.member-name { font-family: 'Jua', sans-serif; font-size: 19px; }
+.member-info { flex: 1; min-width: 0; }
+.member-role { font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+.member-name { font-size: 17px; font-weight: 800; margin-top: 1px; }
 
-.btn-call {
-  background: #2E9B4F; color: #fff; font-size: 11px; font-weight: 900;
-  padding: 6px 10px; border-radius: 20px; border: 2px solid #1A1A1A; text-align: center;
+.btn-call, .btn-sms {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
-.btn-sms {
-  background: #EDE7D8; color: #1A1A1A; font-size: 11px; font-weight: 900;
-  padding: 6px 10px; border-radius: 20px; border: 2px solid #1A1A1A; text-align: center;
-}
-.chief-call, .chief-sms { padding: 6px 11px; }
-.chief-sms { background: #fff; }
+.btn-call { color: var(--green); border: 1px solid var(--green-line); }
+.btn-call:hover { color: var(--green); }
+.btn-sms { color: var(--muted); border: 1px solid var(--line-2); }
+.btn-sms:hover { color: var(--ink-3); }
 
 .duty {
-  margin-top: 12px; background: #fff; border: 3px dashed #1A1A1A; border-radius: 10px; padding: 11px 12px;
+  margin-top: 14px;
+  border: 1px dashed var(--dash);
+  border-radius: var(--radius);
+  padding: 13px 14px;
 }
-.duty-label { font-size: 11px; font-weight: 900; color: #888; margin-bottom: 6px; }
-.duty-body { font-size: 12.5px; font-weight: 700; color: #333; line-height: 1.7; }
+.duty-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.duty-body { font-size: 12.5px; font-weight: 600; color: var(--ink-2); line-height: 1.7; }
 
-.note { font-size: 11px; font-weight: 700; color: #999; margin-top: 8px; }
-.tab-bottom-space { height: 96px; }
+.note { font-size: 10.5px; font-weight: 600; color: var(--muted-2); margin-top: 10px; }
+
+/* ── 데스크톱 ── */
+@media (min-width: 900px) {
+  .org { padding-top: 24px; }
+  .chief { padding: 20px; margin-bottom: 18px; }
+  .chief-name { font-size: 27px; }
+  /* 위원 카드는 1열 유지 — 가로형 행 레이아웃이라 다열로 쪼개면 버튼이 줄바꿈된다 */
+  .duty { margin-top: 18px; }
+}
 </style>
