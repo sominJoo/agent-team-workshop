@@ -10,15 +10,6 @@ function onQueryInput(e: Event) {
 
 <template>
   <div class="room">
-    <!-- 이름 검색 -->
-    <div class="search">
-      <input
-        :value="store.roomQ"
-        placeholder="이름 검색 (예: 김상우)"
-        class="search-input"
-        @input="onQueryInput"
-      >
-    </div>
 
     <!-- 숙소 정보 -->
     <div class="stay">
