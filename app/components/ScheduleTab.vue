@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useWorkshopStore } from '~/stores/workshop'
 import { RED, SKY, GREEN, PLUM, NAVY, GOLD, GRAY } from '~/data/workshop'
 
@@ -6,6 +7,9 @@ const store = useWorkshopStore()
 
 // public/ 자산은 baseURL을 붙여야 서브경로 배포(GitHub Pages)에서도 해석된다
 const posterImage = `${useRuntimeConfig().app.baseURL}images/workshop-intro.png`
+
+// 히어로는 object-fit: cover라 일부만 보인다 — 클릭 시 원본 전체를 라이트박스로 노출
+const posterOpen = ref(false)
 
 interface Item {
   variant?: 'normal' | 'dashed' | 'game' | 'final'
@@ -64,9 +68,10 @@ function onAction(a: 'goMidRide' | 'goGame') {
   <div>
     <!-- 포스터 히어로 -->
     <section class="hero">
-      <div class="hero-poster">
+      <button class="hero-poster" aria-label="포스터 크게 보기" @click="posterOpen = true">
         <img :src="posterImage" alt="2026 하계 워크샵 포스터">
-      </div>
+        <span class="hero-zoom" aria-hidden="true">⤢</span>
+      </button>
       <div class="hero-copy">함께 웃고, 쉬고, 더 가까워지는 하루</div>
       <div class="hero-meta">2026.09.03(목) – 09.04(금) · 양평 지온스테이</div>
     </section>
@@ -148,6 +153,13 @@ function onAction(a: 'goMidRide' | 'goGame') {
         </div>
       </section>
     </div>
+
+    <ImageLightbox
+      :open="posterOpen"
+      :src="posterImage"
+      alt="2026 하계 워크샵 포스터"
+      @close="posterOpen = false"
+    />
   </div>
 </template>
 
@@ -155,6 +167,11 @@ function onAction(a: 'goMidRide' | 'goGame') {
 /* ── 히어로 ── */
 .hero { padding: 16px 0 0; }
 .hero-poster {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
   border-radius: var(--radius-lg);
   overflow: hidden;
   height: 132px;
@@ -166,6 +183,20 @@ function onAction(a: 'goMidRide' | 'goGame') {
   object-fit: cover;
   object-position: 32% 66%;
   display: block;
+}
+/* 확대 가능하다는 힌트 */
+.hero-zoom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(20, 22, 28, .5);
+  color: var(--paper);
+  font-size: 13px;
+  line-height: 28px;
+  text-align: center;
 }
 .hero-copy {
   font-family: 'Black Han Sans', sans-serif;

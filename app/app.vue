@@ -57,10 +57,10 @@ const navItems: { key: Tab; label: string }[] = [
           </nav>
 
           <div class="header-dday">
-            <div class="header-dday-val">D-29</div>
-            <div class="header-dday-sub">09.03 START</div>
+            <div class="header-dday-val">{{ store.dday }}</div>
+            <div class="header-dday-sub">{{ store.ddaySub }}</div>
           </div>
-        </div>
+        </div>이
       </div>
     </header>
 

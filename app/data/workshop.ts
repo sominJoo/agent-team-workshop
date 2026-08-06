@@ -37,6 +37,19 @@ export interface Game {
   lines: string[]
 }
 
+export interface Committee {
+  /** chief: 위원장(다크 카드) · sub: 나머지 위원(일반 카드) */
+  type: 'chief' | 'sub'
+  role: string
+  name: string
+  /** 하이픈 포함 표기 — tel:/sms: 링크는 하이픈을 제거해서 만든다 */
+  phone: string
+  /** 역할 텍스트·아바타 액센트 (sub 전용, chief는 앰버 고정) */
+  color?: string
+  /** 아바타 배경 — 액센트의 저채도 틴트 (sub 전용) */
+  tint?: string
+}
+
 // 액센트 팔레트 (main.css의 --red/--sky/... 와 동일)
 export const RED = '#C4452F'
 export const SKY = '#4A8FB0'
@@ -89,7 +102,16 @@ export const GAMES: Game[] = [
   { no: '04', title: 'TMI 게임', summary: '익명 TMI 추리 · 개인전', tag: '개인전', color: PLUM, lines: ['각자 종이에 자기 관련 TMI 하나씩 적음.', '예:', '· 학창 시절 전교 1등 해봤다', '· 연예인과 사진 찍은 적 있다', '· 해외에서 길 잃은 적 있다', '· 하루에 라면 4개 먹어봤다', '진행자가 하나씩 읽고 누구 이야기인지 맞히기.', '사람들끼리 조금 친해지는 효과도 있고 준비도 거의 없음.'] },
 ]
 
-// 게임 공개 시각: 2026-09-03 18:00 (month는 0-index라 8 = 9월)
+export const COMMITTEE: Committee[] = [
+  { type: 'chief', role: '위원장', name: '정설화', phone: '010-9049-6133' },
+  { type: 'sub', role: '전무', name: '김예지', phone: '010-4105-1927', color: NAVY, tint: 'rgba(42,74,139,.10)' },
+  { type: 'sub', role: '상무', name: '주소민', phone: '010-4527-6649', color: SKY, tint: 'rgba(74,143,176,.12)' },
+]
+
+// 워크샵 시작일: 2026-09-03 (month는 0-index라 8 = 9월)
+export const WORKSHOP_START = new Date(2026, 8, 3, 0, 0, 0)
+
+// 게임 공개 시각: 2026-09-03 18:00
 export const GAME_OPEN_AT = new Date(2026, 8, 3, 18, 0, 0).getTime()
 
 // 위원회 미리보기 코드
