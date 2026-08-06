@@ -95,7 +95,12 @@ export const ROOMS: Room[] = [
   { title: '4호실', bed: '더블 침대 패드 5개 · 여자 8', count: '10명', dot: PLUM, members: ['주소민', '김예지', '이혜윤', '강이정', '윤지수', '오민영', '정설화', '김우영'] },
 ]
 
-export const GAMES: Game[] = []
+// GAMES는 여기 없다.
+//
+// 저장소가 public이라 평문으로 두면 github.com에서 그대로 읽힌다. 평문 원본은
+// data/games.source.json(gitignore)에 있고, 커밋되는 것은 위원회 코드로 암호화한
+// app/data/games.enc.json뿐이다. 코드를 입력하면 브라우저가 복호화한다.
+//   → 데이터 수정 후에는 npm run encrypt 로 암호문을 다시 만들어야 한다.
 
 export const COMMITTEE: Committee[] = [
   { type: 'chief', role: '위원장', name: '정설화', phone: '010-9049-6133' },
@@ -106,8 +111,8 @@ export const COMMITTEE: Committee[] = [
 // 워크샵 시작일: 2026-09-03 (month는 0-index라 8 = 9월)
 export const WORKSHOP_START = new Date(2026, 8, 3, 0, 0, 0)
 
-// 게임 공개 시각: 2026-09-03 18:00
+// 게임 공개 예정 시각: 2026-09-03 18:00 — 카운트다운 표시용.
+//
+// 이 시각이 지나도 잠금이 저절로 풀리지는 않는다. 게임 데이터가 암호화되어 있어
+// 코드 없이는 복호화할 키가 없기 때문이다. 공개 시점에 위원회가 코드를 공지한다.
 export const GAME_OPEN_AT = new Date(2026, 8, 3, 18, 0, 0).getTime()
-
-// 위원회 미리보기 코드
-export const PREVIEW_CODE = '***REMOVED***'

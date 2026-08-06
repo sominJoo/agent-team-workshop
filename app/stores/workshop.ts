@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import {
-  NAMES, RIDES, ROOMS, GAMES, GAME_OPEN_AT, WORKSHOP_START, PREVIEW_CODE,
-  type Segment,
+  NAMES, RIDES, ROOMS, GAME_OPEN_AT, WORKSHOP_START,
+  type Game, type Segment,
 } from '~/data/workshop'
+import { decryptGames } from '~/utils/gameCrypto'
 
 export type Tab = 'schedule' | 'game' | 'ride' | 'room' | 'org'
 export type IntroPhase = 'in' | 'out' | 'done'
@@ -14,7 +15,9 @@ interface State {
   seg: Segment
   roomQ: string
   game: number | null
-  forceOpen: boolean
+  /** 복호화에 성공한 게임 목록. null이면 아직 잠금 상태 */
+  unlockedGames: Game[] | null
+  codeBusy: boolean
   now: number
   intro: IntroPhase
   askCode: boolean
@@ -36,7 +39,8 @@ export const useWorkshopStore = defineStore('workshop', {
     seg: 'go',
     roomQ: '',
     game: null,
-    forceOpen: false,
+    unlockedGames: null,
+    codeBusy: false,
     now: Date.now(),
     intro: 'in',
     askCode: false,
@@ -123,7 +127,12 @@ export const useWorkshopStore = defineStore('workshop', {
     ddaySub: () => `${pad(WORKSHOP_START.getMonth() + 1)}.${pad(WORKSHOP_START.getDate())} START`,
 
     // 게임 잠금/카운트다운
-    unlocked: (s) => s.forceOpen || GAME_OPEN_AT - s.now <= 0,
+    //
+    // 시간이 아니라 복호화 성공 여부로만 결정된다. 데이터가 암호문이라
+    // 이 값을 콘솔에서 뒤집어봐야 보여줄 내용 자체가 없다.
+    unlocked: (s) => s.unlockedGames !== null,
+    /** 공개 예정 시각이 지났는지 — 잠금 화면 문구를 바꾸는 용도 */
+    openTimePassed: (s) => GAME_OPEN_AT - s.now <= 0,
     countdown(s): string {
       const diff = GAME_OPEN_AT - s.now
       if (diff <= 0) return '00:00:00'
@@ -137,13 +146,13 @@ export const useWorkshopStore = defineStore('workshop', {
     },
 
     // 게임 목록 (태그는 아웃라인 배지)
-    games() {
-      return GAMES.map((g, i) => {
+    games(s) {
+      return (s.unlockedGames ?? []).map((g, i) => {
         const ts = tagStyle(g.tag)
         return { ...g, tagFg: ts.fg, tagLine: ts.line, index: i }
       })
     },
-    currentGame: (s) => (s.game === null ? null : GAMES[s.game] ?? null),
+    currentGame: (s) => (s.game === null ? null : s.unlockedGames?.[s.game] ?? null),
     modal(): null | { no: string; title: string; color: string; tag: string; tagFg: string; tagLine: string; lines: string[] } {
       const g = this.currentGame
       if (!g || !this.unlocked) return null
@@ -165,14 +174,22 @@ export const useWorkshopStore = defineStore('workshop', {
     goGame() { this.tab = 'game' },
     showCode() { this.askCode = true; this.codeErr = false },
     onCode(v: string) { this.codeInput = v; this.codeErr = false },
-    checkCode() {
-      const norm = (v: string) => (v || '').replace(/\s+/g, '')
-      if (norm(this.codeInput) === PREVIEW_CODE) {
-        this.forceOpen = true
-        this.askCode = false
-        this.codeErr = false
-      } else {
-        this.codeErr = true
+    // 키 유도(PBKDF2)에 수백 ms가 걸려 비동기다. codeBusy로 중복 제출을 막는다.
+    async checkCode() {
+      if (this.codeBusy) return
+      this.codeBusy = true
+      this.codeErr = false
+      try {
+        const games = await decryptGames(this.codeInput)
+        if (games) {
+          this.unlockedGames = games
+          this.askCode = false
+          this.codeInput = ''
+        } else {
+          this.codeErr = true
+        }
+      } finally {
+        this.codeBusy = false
       }
     },
   },

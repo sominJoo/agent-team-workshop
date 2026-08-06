@@ -26,4 +26,8 @@ logs
 .env.*
 !.env.example
 
+# 게임 데이터 평문 원본 — 저장소가 public이라 절대 커밋하면 안 된다.
+# 커밋되는 것은 npm run encrypt 가 만든 app/data/games.enc.json(암호문)뿐이다.
+/data/games.source.json
+
 .claude
