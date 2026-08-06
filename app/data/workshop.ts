@@ -79,7 +79,7 @@ export const ROOMS: Room[] = [
   { title: '1호실', bed: '더블 침대 1개 · 남자 2', count: '2명', dot: NAVY, members: ['최영철', '김상우'] },
   { title: '2호실', bed: '더블 침대 1개 · 남자 2', count: '2명', dot: SKY, members: ['채병철', '김태호'] },
   { title: '3호실', bed: '더블 침대 1개 + 슈퍼싱글 1개 · 팀장님 + 남자 1', count: '3명', dot: GREEN, members: ['팀장님', '황인용'] },
-  { title: '4호실', bed: '더블 침대 패드 5개 · 여자 8', count: '10명', dot: PLUM, members: ['주소민', '김예지', '이혜윤', '강이정', '윤지수', '오민영', '정설화'] },
+  { title: '4호실', bed: '더블 침대 패드 5개 · 여자 8', count: '10명', dot: PLUM, members: ['주소민', '김예지', '이혜윤', '강이정', '윤지수', '오민영', '정설화', '김우영'] },
 ]
 
 export const GAMES: Game[] = [
