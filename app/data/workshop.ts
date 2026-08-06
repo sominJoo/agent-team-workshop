@@ -115,4 +115,4 @@ export const WORKSHOP_START = new Date(2026, 8, 3, 0, 0, 0)
 export const GAME_OPEN_AT = new Date(2026, 8, 3, 18, 0, 0).getTime()
 
 // 위원회 미리보기 코드
-export const PREVIEW_CODE = '에이전트팀짱짱맨'
+export const PREVIEW_CODE = '위원회짱짱맨'
