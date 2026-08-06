@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
+    "encrypt": "node scripts/encrypt-games.mjs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

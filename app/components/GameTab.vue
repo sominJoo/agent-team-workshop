@@ -30,14 +30,18 @@ function onCodeInput(e: Event) {
       <div class="lock-card">
         <div class="lock-eyebrow">LOCKED</div>
         <div class="lock-title">게임 정보는<br>아직 비공개</div>
-        <div class="lock-desc">09.03(목) 18:00에 열립니다</div>
+        <div class="lock-desc">
+          {{ store.openTimePassed ? '위원회가 공유한 코드를 입력하세요' : '09.03(목) 18:00에 공개' }}
+        </div>
 
-        <div class="countdown">
+        <div v-if="!store.openTimePassed" class="countdown">
           <div class="countdown-label">공개까지</div>
           <div class="countdown-val">{{ store.countdown }}</div>
         </div>
 
-        <button v-if="!store.askCode" class="preview-btn" @click="store.showCode()">위원회 미리보기</button>
+        <button v-if="!store.askCode" class="preview-btn" @click="store.showCode()">
+          {{ store.openTimePassed ? '코드 입력' : '위원회 미리보기' }}
+        </button>
 
         <div v-else class="code-box">
           <div class="code-label">위원회 코드 입력</div>
@@ -49,7 +53,9 @@ function onCodeInput(e: Event) {
               @input="onCodeInput"
               @keydown="onCodeKey"
             >
-            <button class="code-submit" @click="store.checkCode()">확인</button>
+            <button class="code-submit" :disabled="store.codeBusy" @click="store.checkCode()">
+              {{ store.codeBusy ? '확인 중' : '확인' }}
+            </button>
           </div>
           <div v-if="store.codeErr" class="code-err">코드가 올바르지 않습니다</div>
         </div>
@@ -112,6 +118,7 @@ function onCodeInput(e: Event) {
               <div class="center rank-val">—</div>
             </div>
           </div>
+          <!-- 종목명을 쓰면 잠금과 무관하게 번들에 평문으로 남는다 (목록의 '개인전' 배지로 알 수 있다) -->
           <div class="note">* 3팀 리그로 진행하며 대진표는 따로 없습니다. 개인전 종목은 팀 점수에서 제외.</div>
         </div>
       </div>
