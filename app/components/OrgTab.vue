@@ -1,20 +1,11 @@
 <script setup lang="ts">
-import { NAVY, SKY, PLUM } from '~/data/workshop'
+import { COMMITTEE } from '~/data/workshop'
 
-interface Member {
-  role: string
-  name: string
-  initial: string
-  color: string
-  /** 아바타 배경 (액센트의 저채도 틴트) */
-  tint: string
-}
+const chief = COMMITTEE.find((m) => m.type === 'chief')
+const members = COMMITTEE.filter((m) => m.type === 'sub')
 
-const members: Member[] = [
-  { role: '전무', name: '김예지', initial: '김', color: NAVY, tint: 'rgba(42,74,139,.10)' },
-  { role: '상무', name: '주소민', initial: '주', color: SKY, tint: 'rgba(74,143,176,.12)' },
-  { role: '고문', name: '오민영', initial: '오', color: PLUM, tint: 'rgba(158,67,104,.12)' },
-]
+const initial = (name: string) => name.slice(0, 1)
+const digits = (phone: string) => phone.replace(/\D/g, '')
 </script>
 
 <template>
@@ -24,28 +15,28 @@ const members: Member[] = [
       <div class="eyebrow org-eyebrow">2026 하계 워크샵 · 워크샵 위원회</div>
 
       <!-- 위원장 -->
-      <div class="chief">
-        <span class="chief-avatar">정</span>
+      <div v-if="chief" class="chief">
+        <span class="chief-avatar">{{ initial(chief.name) }}</span>
         <div class="chief-info">
-          <div class="chief-role">위원장</div>
-          <div class="chief-name">정설화</div>
+          <div class="chief-role">{{ chief.role }}</div>
+          <div class="chief-name">{{ chief.name }}</div>
         </div>
         <div class="chief-actions">
-          <a href="tel:01000000000" class="chief-call">전화</a>
-          <a href="sms:01000000000" class="chief-sms">문자</a>
+          <a :href="`tel:${digits(chief.phone)}`" class="chief-call">전화</a>
+          <a :href="`sms:${digits(chief.phone)}`" class="chief-sms">문자</a>
         </div>
       </div>
 
       <!-- 나머지 위원 -->
       <div class="member-list">
         <div v-for="m in members" :key="m.name" class="member">
-          <span class="member-avatar" :style="{ background: m.tint, color: m.color }">{{ m.initial }}</span>
+          <span class="member-avatar" :style="{ background: m.tint, color: m.color }">{{ initial(m.name) }}</span>
           <div class="member-info">
             <div class="member-role" :style="{ color: m.color }">{{ m.role }}</div>
             <div class="member-name">{{ m.name }}</div>
           </div>
-          <a href="tel:01000000000" class="btn-call">전화</a>
-          <a href="sms:01000000000" class="btn-sms">문자</a>
+          <a :href="`tel:${digits(m.phone)}`" class="btn-call">전화</a>
+          <a :href="`sms:${digits(m.phone)}`" class="btn-sms">문자</a>
         </div>
       </div>
 
@@ -97,7 +88,7 @@ const members: Member[] = [
   color: var(--paper);
   margin-top: 2px;
 }
-.chief-actions { display: flex; flex-direction: column; gap: 6px; }
+.chief-actions { display: flex; align-items: center; gap: 8px; }
 .chief-call, .chief-sms {
   font-size: 11px;
   font-weight: 800;

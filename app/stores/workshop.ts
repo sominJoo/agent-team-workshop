@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import {
-  NAMES, RIDES, ROOMS, GAMES, GAME_OPEN_AT, PREVIEW_CODE,
+  NAMES, RIDES, ROOMS, GAMES, GAME_OPEN_AT, WORKSHOP_START, PREVIEW_CODE,
   type Segment,
 } from '~/data/workshop'
 
@@ -108,6 +108,19 @@ export const useWorkshopStore = defineStore('workshop', {
         }),
       }))
     },
+
+    // 헤더 D-day — 시각이 아니라 '날짜' 차이로 계산 (자정 기준)
+    dday(s): string {
+      const startOfDay = (d: Date | number) => {
+        const x = new Date(d)
+        return new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+      }
+      const diff = Math.round((startOfDay(WORKSHOP_START) - startOfDay(s.now)) / 86400000)
+      if (diff > 0) return `D-${diff}`
+      if (diff === 0) return 'D-DAY'
+      return `D+${-diff}`
+    },
+    ddaySub: () => `${pad(WORKSHOP_START.getMonth() + 1)}.${pad(WORKSHOP_START.getDate())} START`,
 
     // 게임 잠금/카운트다운
     unlocked: (s) => s.forceOpen || GAME_OPEN_AT - s.now <= 0,

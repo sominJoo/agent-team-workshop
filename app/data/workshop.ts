@@ -37,6 +37,19 @@ export interface Game {
   lines: string[]
 }
 
+export interface Committee {
+  /** chief: 위원장(다크 카드) · sub: 나머지 위원(일반 카드) */
+  type: 'chief' | 'sub'
+  role: string
+  name: string
+  /** 하이픈 포함 표기 — tel:/sms: 링크는 하이픈을 제거해서 만든다 */
+  phone: string
+  /** 역할 텍스트·아바타 액센트 (sub 전용, chief는 앰버 고정) */
+  color?: string
+  /** 아바타 배경 — 액센트의 저채도 틴트 (sub 전용) */
+  tint?: string
+}
+
 // 액센트 팔레트 (main.css의 --red/--sky/... 와 동일)
 export const RED = '#C4452F'
 export const SKY = '#4A8FB0'
@@ -84,7 +97,16 @@ export const ROOMS: Room[] = [
 
 export const GAMES: Game[] = []
 
-// 게임 공개 시각: 2026-09-03 18:00 (month는 0-index라 8 = 9월)
+export const COMMITTEE: Committee[] = [
+  { type: 'chief', role: '위원장', name: '정설화', phone: '010-9049-6133' },
+  { type: 'sub', role: '전무', name: '김예지', phone: '010-4105-1927', color: NAVY, tint: 'rgba(42,74,139,.10)' },
+  { type: 'sub', role: '상무', name: '주소민', phone: '010-4527-6649', color: SKY, tint: 'rgba(74,143,176,.12)' },
+]
+
+// 워크샵 시작일: 2026-09-03 (month는 0-index라 8 = 9월)
+export const WORKSHOP_START = new Date(2026, 8, 3, 0, 0, 0)
+
+// 게임 공개 시각: 2026-09-03 18:00
 export const GAME_OPEN_AT = new Date(2026, 8, 3, 18, 0, 0).getTime()
 
 // 위원회 미리보기 코드
