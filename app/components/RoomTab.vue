@@ -25,6 +25,7 @@ function onQueryInput(e: Event) {
         <div class="card-head">
           <span class="dot" :style="{ background: rm.dot }" />
           <span class="title">{{ rm.title }}</span>
+          <span class="gender" :style="{ background: rm.gender.bg, color: rm.gender.fg }">{{ rm.gender.label }}</span>
           <span class="count">{{ rm.count }}</span>
         </div>
         <div class="card-body">
@@ -41,7 +42,7 @@ function onQueryInput(e: Event) {
       </div>
     </div>
 
-    <div class="note">* 여자 8명 방은 더블 침대 패드 5개 · 총 10인 기준입니다.</div>
+    <div class="note">* 5호실은 더블 침대 패드 5개 · 총 10인 기준입니다.</div>
   </div>
 </template>
 
@@ -114,6 +115,14 @@ function onQueryInput(e: Event) {
 }
 .dot { flex: none; width: 6px; height: 6px; border-radius: 50%; }
 .title { font-size: 14px; font-weight: 800; }
+.gender {
+  flex: none;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2.5px 8px;
+  border-radius: 20px;
+  letter-spacing: -.2px;
+}
 .count { margin-left: auto; font-size: 10.5px; font-weight: 600; color: var(--muted); }
 .card-body { padding: 12px 14px; }
 .bed { font-size: 11.5px; font-weight: 600; color: var(--muted); margin-bottom: 9px; }

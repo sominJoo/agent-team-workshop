@@ -31,6 +31,12 @@ const pad = (n: number) => (n < 10 ? '0' : '') + n
 const INK = '#20242C'
 const PAPER = '#F6F1E6'
 
+// 방배정 성별 배지 — 액센트 + 저채도 틴트
+const GENDER_STYLE: Record<string, { fg: string; bg: string }> = {
+  남자: { fg: '#2A4A8B', bg: 'rgba(42, 74, 139, .10)' },
+  여자: { fg: '#9E4368', bg: 'rgba(158, 67, 104, .10)' },
+}
+
 export const useWorkshopStore = defineStore('workshop', {
   state: (): State => ({
     tab: 'schedule',
@@ -101,6 +107,7 @@ export const useWorkshopStore = defineStore('workshop', {
         bed: rm.bed,
         count: rm.count,
         dot: rm.dot,
+        gender: { label: rm.gender, ...GENDER_STYLE[rm.gender]! },
         members: rm.members.map((n) => {
           const hit = (q && n.indexOf(q) >= 0) || (!q && s.me === n)
           return {
