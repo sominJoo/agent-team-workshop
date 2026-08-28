@@ -31,11 +31,11 @@ interface Item {
 }
 
 const day1: Item[] = [
-  { time: '12:00', end: '13:00', dot: RED, title: '점심 식사', now: true, link: { label: '황해식당', url: 'https://naver.me/FeX2FAkV' } },
-  { time: '13:00', end: '14:00', dot: SKY, title: '야외활동 진행', link: { label: '용문사 관광단지', url: 'https://naver.me/5PVaMKEf' } },
-  { time: '14:00', end: '14:30', dot: GOLD, title: '카페', sub: '적당한 곳 들어가기' },
-  { time: '14:30', end: '16:00', dot: PLUM, title: '숙소 입실 & 마트 장보기', sub: '마트조 / 간식조 / 송어조 분리 이동', action: 'goMidRide', actionLabel: '조별 차편 확인' },
-  { variant: 'dashed', time: '16:00', end: '17:30', title: '개인 시간', noteLink: { label: '지온스테이', url: 'https://naver.me/G5kDtM7h' } },
+  { time: '12:30', end: '13:30', dot: RED, title: '점심 식사', now: true, link: { label: '황해식당', url: 'https://naver.me/FeX2FAkV' } },
+  { time: '13:30', end: '14:30', dot: SKY, title: '야외활동 진행', link: { label: '용문사 관광단지', url: 'https://naver.me/5PVaMKEf' } },
+  { time: '14:30', end: '15:00', dot: GOLD, title: '카페', sub: '적당한 곳 들어가기' },
+  { time: '15:00', end: '16:30', dot: PLUM, title: '숙소 입실 & 마트 장보기', sub: '마트조 / 간식조 / 송어조 분리 이동', action: 'goMidRide', actionLabel: '조별 차편 확인' },
+  { variant: 'dashed', time: '16:30', end: '17:30', title: '개인 시간', noteLink: { label: '지온스테이', url: 'https://naver.me/G5kDtM7h' } },
   { time: '17:30', end: '18:00', dot: NAVY, title: '워크샵 발표', sub: '하반기 계획 공유 · 숙소 내 TV 활용', link: { label: '발표 자료 (구글 슬라이드)', url: 'https://docs.google.com/presentation/', tone: 'navy' } },
   { time: '18:00', end: '20:00', dot: GREEN, title: '저녁식사 · 숙소 바베큐', link: { label: '지온스테이', url: 'https://naver.me/G5kDtM7h' } },
   { variant: 'game', time: '20:00', end: '21:00', title: '게임 진행', action: 'goGame', actionLabel: '게임 종목 보기 ›' },

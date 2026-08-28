@@ -70,7 +70,7 @@ export const NAMES = [
 export const RIDES: Record<Segment, Ride[]> = {
   go: [
     { team: '서울', driver: '주소민', riders: '김상우, 박세종, 최영철', car: '자차 · 283노3449', place: '잠실 종합운동장역 1번 출구', map: 'https://map.naver.com/p/search/잠실종합운동장역', dot: RED },
-    { team: '성남', driver: '김예지', riders: '이혜윤, 황인용, 김태호', car: '자차', place: '성남 출발', dot: SKY },
+    { team: '성남', driver: '김예지', riders: '이혜윤, 황인용, 김태호', car: '자차', place: '단대오거리역 1번 출구', map: 'https://map.naver.com/p/search/단대오거리역', dot: SKY },
     { team: '인천', driver: '채병철', riders: '단독 이동', car: '자차', place: '인천 출발', dot: GREEN },
     { team: '수원', driver: '강이정', riders: '윤지수', car: '회사차 · 아반떼 179허8119', place: '수원 출발', dot: PLUM },
     { team: '수원', driver: '오민영', riders: '김우영, 정설화', car: '자차', place: '수원 출발', dot: NAVY },
@@ -78,7 +78,7 @@ export const RIDES: Record<Segment, Ride[]> = {
   mid: [
     { team: '마트조 / 고기조', driver: '주소민', riders: '김상우, 박세종, 김우영', car: '자차 · 283노3449', place: '양평 농민마트 / 한결축산 양평점', map: 'https://map.naver.com/p/search/양평 농민마트', dot: RED },
     { team: '간식조', driver: '김예지', riders: '정설화, 김태호', car: '자차', place: '양평물맑은시장', map: 'https://map.naver.com/p/search/양평물맑은시장', dot: SKY },
-    { team: '숙소조', driver: '채병철', riders: '최영철, 황인용', car: '자차', place: '지온스테이(숙소)', map: 'https://naver.me/G5kDtM7h', dot: GREEN },
+    { team: '숙소조', driver: '채병철', riders: '최영철, 황인용', car: '자차2', place: '지온스테이(숙소)', map: 'https://naver.me/G5kDtM7h', dot: GREEN },
     { team: '송어조', driver: '강이정', riders: '윤지수', car: '회사차 · 아반떼 179허8119', place: '평창송어', map: 'https://naver.me/F88I0nRm', dot: PLUM },
     { team: '숙소조', driver: '오민영', riders: '이혜윤', car: '자차', place: '지온스테이(숙소)', map: 'https://naver.me/G5kDtM7h', dot: NAVY },
   ],

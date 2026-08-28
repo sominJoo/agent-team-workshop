@@ -54,7 +54,7 @@ const segs = [
                 <span class="stop-no-none">{{ st.n }}</span>{{ st.name }}
               </span>
             </template>
-            <span v-if="r.noStops" class="stop-none">집결 장소 미정</span>
+            <span v-if="r.noStops" class="stop-none">{{ r.noStopsLabel }}</span>
           </div>
 
           <div v-if="r.mine" class="mine">내가 탑승하는 차량</div>

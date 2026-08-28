@@ -80,7 +80,15 @@ export const useWorkshopStore = defineStore('workshop', {
           const url = st.url || (linkable ? 'https://map.naver.com/p/search/' + encodeURIComponent(String(st.q || st.name)) : '#')
           return { n: String(i + 1), name: st.name, url, has: linkable, no: !linkable }
         })
-        return { ...r, mine, stops, noStops: stops.length === 0 }
+        // 단독 이동은 집결지 자체가 없다 — 미정과 구분해서 표기
+        const solo = (r.riders || '').indexOf('단독') >= 0
+        return {
+          ...r,
+          mine,
+          stops,
+          noStops: stops.length === 0,
+          noStopsLabel: solo ? '집결 없음' : '집결 장소 미정',
+        }
       })
       if (s.me) list.sort((a, b) => (b.mine ? 1 : 0) - (a.mine ? 1 : 0))
       return list
