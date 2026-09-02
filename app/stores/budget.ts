@@ -202,28 +202,6 @@ export const useBudgetStore = defineStore('budget', {
       this.filter = f
     },
 
-    /**
-     * 목록에서 한 칸 이동. 이웃과 sort_order를 맞바꾼다.
-     * 값이 같아 자리가 바뀌지 않는 경우를 대비해 이동 후 10 단위로 다시 매긴다.
-     */
-    async move(id: string, dir: -1 | 1) {
-      const list = this.rows as { id: string }[]
-      const i = list.findIndex((r) => r.id === id)
-      const j = i + dir
-      if (i < 0 || j < 0 || j >= list.length) return
-
-      const next = [...list]
-      const [moved] = next.splice(i, 1)
-      next.splice(j, 0, moved!)
-
-      const sb = useSupabase()
-      if (!sb) return
-      await Promise.all(
-        next.map((r, idx) => sb.from('expenses').update({ sort_order: (idx + 1) * 10 }).eq('id', r.id)),
-      )
-      await this.load()
-    },
-
     async load() {
       const sb = useSupabase()
       if (!sb) {

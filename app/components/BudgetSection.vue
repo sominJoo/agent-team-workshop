@@ -18,25 +18,56 @@ const won = (n: number) => (n < 0 ? '-₩' : '₩') + Math.abs(n).toLocaleString
 /** 부호를 살려서 표기 — 절감은 -, 초과는 + */
 const signed = (n: number) => (n > 0 ? '+' : n < 0 ? '-' : '') + '₩' + Math.abs(n).toLocaleString('ko-KR')
 
-/** 입력값에서 숫자만 남긴다. 콤마·공백을 넣어도 받아들인다. */
+/**
+ * 입력값에서 숫자만 남긴다. 콤마·공백을 넣어도 받아들인다.
+ * 빈 값과 0은 모두 null로 본다 — 0원 결제란 없으므로 '아직 결제 전'을 뜻한다.
+ */
 function toAmount(v: string): number | null {
   const digits = v.replace(/[^0-9]/g, '')
-  return digits === '' ? null : Number(digits)
+  if (digits === '') return null
+  const n = Number(digits)
+  return n === 0 ? null : n
 }
 
 // ── 실제 사용액 인라인 입력 ──
-const saving = ref<string | null>(null)
+//
+// 모바일에서는 입력 후 다른 곳을 누르지 않고 그대로 벗어나는 일이 잦다.
+// blur뿐 아니라 키보드 '완료'(Enter)에서도 저장되게 하고, 저장 결과를
+// 눈으로 확인할 수 있도록 상태를 표시한다.
+type SaveState = 'saving' | 'saved' | 'error'
+const saveState = ref<Record<string, SaveState | undefined>>({})
 
-async function saveActual(id: string, raw: string) {
+async function saveActual(id: string, raw: string, current: number | null, el: HTMLInputElement) {
   const value = toAmount(raw)
-  saving.value = id
+
+  // 저장된 값과 화면 표시를 일치시킨다. '0'이나 '1,0 00' 처럼 입력해도
+  // 실제 저장값(0 → 미결제)에 맞춰 칸을 다시 그린다.
+  const show = (n: number | null) => { el.value = n === null ? '' : n.toLocaleString('ko-KR') }
+
+  if (value === current) {
+    show(current) // 값이 그대로면 저장하지 않고 표기만 정리한다
+    return
+  }
+
+  saveState.value = { ...saveState.value, [id]: 'saving' }
   try {
     await store.updateExpense(id, { actual_amount: value })
+    show(value)
+    saveState.value = { ...saveState.value, [id]: 'saved' }
+    setTimeout(() => {
+      const next = { ...saveState.value }
+      if (next[id] === 'saved') delete next[id]
+      saveState.value = next
+    }, 1800)
   } catch (e) {
+    saveState.value = { ...saveState.value, [id]: 'error' }
     alert(e instanceof Error ? e.message : '저장에 실패했습니다.')
-  } finally {
-    saving.value = null
   }
+}
+
+/** 키보드 '완료'로 입력을 끝내면 blur가 일어나 저장으로 이어진다 */
+function blurSelf(e: Event) {
+  (e.target as HTMLInputElement).blur()
 }
 
 // ── 지출 추가 ──
@@ -209,15 +240,10 @@ async function remove(id: string, title: string) {
 
       <!-- 목록 (입력 순서) -->
       <div class="rows">
-        <div v-for="(r, i) in store.visibleRows" :key="r.id" class="row">
+        <div v-for="r in store.visibleRows" :key="r.id" class="row">
           <div class="row-top">
             <span v-if="r.day" class="day-chip">{{ r.day }}</span>
             <span class="row-title">{{ r.title }}</span>
-            <!-- 순서 이동은 필터가 '전체'일 때만 — 걸러진 목록에서 옮기면 결과가 헷갈린다 -->
-            <template v-if="store.filter === 'all'">
-              <button class="mv" title="위로" :disabled="i === 0" @click="store.move(r.id, -1)">↑</button>
-              <button class="mv" title="아래로" :disabled="i === store.visibleRows.length - 1" @click="store.move(r.id, 1)">↓</button>
-            </template>
             <button class="del" title="삭제" @click="remove(r.id, r.title)">×</button>
           </div>
 
@@ -236,12 +262,17 @@ async function remove(id: string, title: string) {
               <span class="amt-label">실제</span>
               <input
                 class="amt-input"
-                :class="{ empty: r.actual_amount === null }"
+                :class="{ empty: r.actual_amount === null, [saveState[r.id] ?? '']: !!saveState[r.id] }"
                 inputmode="numeric"
+                enterkeyhint="done"
                 :value="r.actual_amount === null ? '' : r.actual_amount.toLocaleString('ko-KR')"
-                :placeholder="saving === r.id ? '저장 중…' : '미결제'"
-                @change="saveActual(r.id, ($event.target as HTMLInputElement).value)"
+                placeholder="미결제"
+                @blur="saveActual(r.id, ($event.target as HTMLInputElement).value, r.actual_amount, $event.target as HTMLInputElement)"
+                @keyup.enter="blurSelf"
               />
+              <span v-if="saveState[r.id]" class="save-state" :class="saveState[r.id]">
+                {{ saveState[r.id] === 'saving' ? '저장 중' : saveState[r.id] === 'saved' ? '저장됨' : '실패' }}
+              </span>
             </div>
             <div v-if="r.diff !== null && r.diff !== 0" class="diff" :class="{ over: r.diff > 0 }">
               {{ signed(r.diff) }}
@@ -420,19 +451,8 @@ async function remove(id: string, title: string) {
   padding: 1px 7px;
 }
 .row-title { font-size: 13.5px; font-weight: 800; }
-.mv {
-  font-size: 12px;
-  line-height: 1;
-  color: var(--muted-2);
-  background: transparent;
-  border: 1px solid var(--line-2);
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 3px 6px;
-}
-.mv:first-of-type { margin-left: auto; }
-.mv:disabled { opacity: .3; cursor: default; }
 .del {
+  margin-left: auto;
   font-size: 15px;
   line-height: 1;
   color: var(--muted-2);
@@ -470,6 +490,13 @@ async function remove(id: string, title: string) {
   background: var(--card);
 }
 .amt-input.empty { border-style: dashed; color: var(--muted); }
+.amt-input.saving { border-color: var(--amber-line); background: var(--amber-bg); }
+.amt-input.saved  { border-color: var(--green); }
+.amt-input.error  { border-color: var(--red); }
+.save-state { font-size: 9.5px; font-weight: 800; }
+.save-state.saving { color: var(--amber-fg); }
+.save-state.saved  { color: var(--green); }
+.save-state.error  { color: var(--red); }
 .diff { margin-left: auto; font-size: 11.5px; font-weight: 800; color: var(--green); }
 .diff.over { color: var(--red); }
 .row-note { font-size: 10.5px; font-weight: 600; color: var(--muted); margin-top: 6px; line-height: 1.6; }
