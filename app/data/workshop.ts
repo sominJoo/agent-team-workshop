@@ -64,7 +64,6 @@ export const GRAY = '#B0AB9C'
 export const NAMES = [
   '박세종', '김상우', '주소민', '최영철', '김예지', '이혜윤', '황인용',
   '김태호', '채병철', '강이정', '윤지수', '오민영', '김우영', '정설화',
-  '배한솔', '장소라',
 ]
 
 export const RIDES: Record<Segment, Ride[]> = {
@@ -83,8 +82,7 @@ export const RIDES: Record<Segment, Ride[]> = {
     { team: '숙소조', driver: '오민영', riders: '이혜윤', car: '자차', place: '지온스테이(숙소)', map: 'https://naver.me/G5kDtM7h', dot: NAVY },
   ],
   back: [
-    { team: '서울', driver: '주소민', riders: '김상우, 배한솔, 최영철', car: '자차 · 283노3449', place: '잠실 종합운동장역 1번 출구', map: 'https://map.naver.com/p/search/잠실종합운동장역', dot: RED },
-    { team: '관악', driver: '장소라', riders: '박세종', car: '자차', place: '관악 방면', dot: GOLD },
+    { team: '서울', driver: '주소민', riders: '김상우, 박세종, 최영철', car: '자차 · 283노3449', place: '잠실 종합운동장역 1번 출구', map: 'https://map.naver.com/p/search/잠실종합운동장역', dot: RED },
     { team: '성남', driver: '김예지', riders: '이혜윤, 황인용, 김태호', car: '자차', place: '성남 방면', dot: SKY },
     { team: '인천', driver: '채병철', riders: '단독 이동', car: '자차', place: '인천 방면', dot: GREEN },
     { team: '수원', driver: '강이정', riders: '윤지수', car: '회사차 · 아반떼 179허8119', place: '수원 방면', dot: PLUM },
@@ -95,9 +93,9 @@ export const RIDES: Record<Segment, Ride[]> = {
 export const ROOMS: Room[] = [
   { title: '1호실', bed: '더블 침대 1개', count: '2명', gender: '남자', dot: NAVY, members: ['김상우', '김태호'] },
   { title: '2호실', bed: '더블 침대 1개', count: '2명', gender: '여자', dot: SKY, members: ['이혜윤', '김예지'] },
-  { title: '3호실', bed: '더블 침대 1개 + 슈퍼싱글 1개', count: '3명', gender: '여자', dot: GREEN, members: ['오민영', '정설화', '장소라'] },
+  { title: '3호실', bed: '더블 침대 1개 + 슈퍼싱글 1개', count: '3명', gender: '여자', dot: GREEN, members: ['오민영', '정설화', '김우영'] },
   { title: '4호실', bed: '더블 침대 1개 + 침대 패드 2개(관리실)', count: '4명', gender: '남자', dot: RED, members: ['최영철', '박세종', '황인용', '채병철'] },
-  { title: '5호실', bed: '더블 침대 패드 5개', count: '10명', gender: '여자', dot: PLUM, members: ['김우영', '윤지수', '주소민', '강이정', '배한솔'] },
+  { title: '5호실', bed: '더블 침대 패드 5개', count: '10명', gender: '여자', dot: PLUM, members: ['윤지수', '주소민', '강이정'] },
 ]
 
 // GAMES는 여기 없다.
