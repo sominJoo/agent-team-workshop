@@ -119,14 +119,6 @@ async function submit() {
   }
 }
 
-async function remove(id: string, title: string) {
-  if (!confirm(`'${title}' 항목을 삭제할까요?`)) return
-  try {
-    await store.removeExpense(id)
-  } catch (e) {
-    alert(e instanceof Error ? e.message : '삭제에 실패했습니다.')
-  }
-}
 </script>
 
 <template>
@@ -244,7 +236,6 @@ async function remove(id: string, title: string) {
           <div class="row-top">
             <span v-if="r.day" class="day-chip">{{ r.day }}</span>
             <span class="row-title">{{ r.title }}</span>
-            <button class="del" title="삭제" @click="remove(r.id, r.title)">×</button>
           </div>
 
           <div class="row-src">
@@ -450,17 +441,7 @@ async function remove(id: string, title: string) {
   border-radius: 20px;
   padding: 1px 7px;
 }
-.row-title { font-size: 13.5px; font-weight: 800; }
-.del {
-  margin-left: auto;
-  font-size: 15px;
-  line-height: 1;
-  color: var(--muted-2);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 2px 4px;
-}
+.row-title { font-size: 13.5px; font-weight: 800; flex: 1; min-width: 0; }
 .row-src { font-size: 10.5px; font-weight: 700; color: var(--muted); margin-top: 3px; }
 .tag {
   display: inline-block;
