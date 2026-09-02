@@ -46,6 +46,9 @@ const digits = (phone: string) => phone.replace(/\D/g, '')
       </div>
 
       <div class="note">* 연락처는 자리표시(010-0000-0000)입니다.</div>
+
+      <!-- 위원회 전용 예산 관리 -->
+      <BudgetSection />
     </div>
   </div>
 </template>

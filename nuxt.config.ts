@@ -14,6 +14,16 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  // Supabase 연결 정보. 정적 빌드라 public 값은 번들에 포함된다 —
+  // anon 키는 애초에 브라우저 노출을 전제로 한 공개 키라 문제 없다.
+  // 저장소에는 남기지 않고 로컬은 .env, 배포는 Actions secret으로 주입한다.
+  runtimeConfig: {
+    public: {
+      supabaseUrl: '',
+      supabaseAnonKey: '',
+    },
+  },
+
   app: {
     baseURL,
 
